@@ -90,10 +90,10 @@ static void io_file_close(io_t* io) {
 }
 
 static io_t *io_open_file(const char *fn, const char *mode) {
-    io_file_t *io = (io_file_t*) Calloc(1, io_file_t);
+    io_file_t *io = (io_file_t*) R_Calloc(1, io_file_t);
     io->f = fopen(fn, mode);
     if (!io->f) {
-	Free(io);
+	R_Free(io);
 	return 0;
     }
     io->io.read = io_file_read;
@@ -159,12 +159,12 @@ static void io_raw_close(io_t* io) {
     io_raw_t *ior = (io_raw_t*) io;
     if (io) {
 	R_ReleaseObject(ior->raw);
-	Free(io);
+	R_Free(io);
     }
 }
 
 static io_t *io_open_raw(SEXP what) {
-    io_raw_t *io = (io_raw_t*) Calloc(1, io_raw_t);
+    io_raw_t *io = (io_raw_t*) R_Calloc(1, io_raw_t);
     io->raw = what;
     R_PreserveObject(what);
     io->pos = 0;
@@ -238,12 +238,12 @@ static void io_conn_close(io_t* io) {
 	    UNPROTECT(1);
 	}
 	R_ReleaseObject(ioc->c);
-	Free(io);
+	R_Free(io);
     }
 }
 
 static io_t *io_open_conn(SEXP what, int close_on_free) {
-    io_conn_t *io = (io_conn_t*) Calloc(1, io_conn_t);
+    io_conn_t *io = (io_conn_t*) R_Calloc(1, io_conn_t);
     io->c = what;
     if (!raw0) {
 	raw0 = allocVector(RAWSXP, 0);
